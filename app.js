@@ -27,7 +27,6 @@ io.on('connection', function(client){
           // console.log(lights[1]);
           // console.log(lights[2]);
           // console.log(lights[3]);
-
         });
         client.emit("authenticated");
         break;
@@ -38,6 +37,9 @@ io.on('connection', function(client){
           console.log("Authentication ID - " + client.id);
           console.log("---------------------------------------");
           client.emit("authenticated");
+        }
+        else {
+          client.emit("No PI");
         }
         break;
     }
@@ -50,8 +52,19 @@ io.on('connection', function(client){
     }
   }, 1000);
 
-});
-
-io.on("disconnect", function() {
-  pi_ID = null;
+  client.on("disconnect", function() {
+    if (client.id == pi_ID) {
+      pi_ID = temperature = humidity = lights = null;
+      console.log("-------------------------");
+      console.log("Smart PI disconnected.");
+      console.log("ID - " + client.id);
+      console.log("-------------------------");
+    }
+    else {
+      console.log("-------------------------");
+      console.log("Smart User disconnected.");
+      console.log("ID - " + client.id);
+      console.log("-------------------------");
+    }
+  });
 });
