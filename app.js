@@ -3,7 +3,7 @@ var io = require('socket.io')(80);
 console.log("Socket server running on port 80");
 
 var identifier = "#5521SHCBUV";
-var pi_ID, lights, temperature, humidity;
+var pi_ID
 var packet = {};
 
 
@@ -56,7 +56,7 @@ io.on('connection', function(client){
 
   client.on("disconnect", function() {
     if (client.id == pi_ID) {
-      pi_ID = temperature = humidity = lights = null;
+      pi_ID = null;
       console.log("-------------------------");
       console.log("Smart PI disconnected.");
       console.log("ID - " + client.id);

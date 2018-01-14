@@ -1,9 +1,12 @@
 var io = require('socket.io')(80);
 
-console.log("Smart Homes server running on port 80");
+console.log("Socket server running on port 80");
 
 var identifier = "#5521SHCBUV";
-var pi_ID, lights, temperature, humidity;
+var pi_ID;
+var packet = {};
+packet.temperature = 32;
+packet.humidity = 72;
 
 io.on('connection', function(client){
   client.auth = false;
@@ -21,12 +24,10 @@ io.on('connection', function(client){
         console.log("----------------------------------------");
         client.on('status', function(data){
           var status = JSON.parse(data);
-          lights = status.lights;
-          temperature = status.temperature;
-          humidity = status.humidity;
-          // console.log(lights[1]);
-          // console.log(lights[2]);
-          // console.log(lights[3]);
+          packet.lights = status.lights;
+          packet.temperature = status.temperature;
+          packet.humidity = status.humidity;
+          console.log(packet.lights);
         });
         client.emit("authenticated");
         break;
@@ -36,6 +37,9 @@ io.on('connection', function(client){
           console.log("Authentication ID - " + client.id);
           console.log("---------------------------------------");
           client.emit("authenticated");
+          client.on('requestStatus', function(data){
+            client.emit("statusResponse", packet);
+          });
         break;
     }
   });
@@ -49,7 +53,7 @@ io.on('connection', function(client){
 
   client.on("disconnect", function() {
     if (client.id == pi_ID) {
-      pi_ID = temperature = humidity = lights = null;
+      pi_ID = null;
       console.log("-------------------------");
       console.log("Smart PI disconnected.");
       console.log("ID - " + client.id);
