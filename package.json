@@ -4,8 +4,8 @@
   "description": "A socket server for smarthomes project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "node test.js",
+    "start": "node app.js"
   },
   "keywords": [
     "socket",
