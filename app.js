@@ -1,4 +1,4 @@
-var io = require('socket.io')(80);
+var io = require('socket.io')(process.env.PORT || 8080);
 
 console.log("Socket server running on port 80");
 
