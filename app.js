@@ -1,9 +1,10 @@
-var io = require('socket.io')(process.env.PORT || 8080);
+var port = (process.env.PORT || 8090);
+var io = require('socket.io')(port);
 
-console.log("Socket server running on port 80");
+console.log("Socket server running on port " + port);
 
 var identifier = "#5521SHCBUV";
-var pi_ID
+var pi_ID;
 var packet = {};
 
 
@@ -11,7 +12,7 @@ io.on('connection', function(client){
   client.auth = false;
   client.on('authenticate', function(data){
     var recData = JSON.parse(data);
-    if(identifier == recData.identifier) {
+    if(identifier === recData.identifier) {
       client.auth = true;
     }
     switch (recData.type) {
@@ -27,6 +28,11 @@ io.on('connection', function(client){
           packet.temperature = status.temperature;
           packet.humidity = status.humidity;
         });
+        client.on('tempHumid', function (data) {
+            var rawData = JSON.parse(data);
+            packet.temperature = rawData.temperature;
+            packet.humidity = rawData.humidity;
+        });
         client.emit("authenticated");
         break;
       case "smartUsr":
@@ -37,7 +43,11 @@ io.on('connection', function(client){
           console.log("---------------------------------------");
           client.emit("authenticated", packet);
           client.on('status', function(data){
-            client.emit("authenticated", packet);
+              console.log(data);
+              client.emit("authenticated", packet);
+          });
+          client.on('requestData', function () {
+              client.emit("data", packet);
           });
         }
         else {
@@ -55,7 +65,7 @@ io.on('connection', function(client){
   }, 1000);
 
   client.on("disconnect", function() {
-    if (client.id == pi_ID) {
+    if (client.id === pi_ID) {
       pi_ID = null;
       console.log("-------------------------");
       console.log("Smart PI disconnected.");
