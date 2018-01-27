@@ -23,6 +23,7 @@ io.on('connection', function(client){
         console.log("Authentication ID - " + client.id);
         console.log("----------------------------------------");
         client.on('status', function(data){
+          console.log("Status event calllllllllled")
           var status = JSON.parse(data);
           packet.lights = status.lights;
           packet.temperature = status.temperature;

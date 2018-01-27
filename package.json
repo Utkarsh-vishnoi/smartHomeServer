@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node test.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "remake": "node remake.js"
   },
   "keywords": [
     "socket",
