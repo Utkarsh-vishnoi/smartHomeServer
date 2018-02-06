@@ -1,7 +1,14 @@
-var port = (process.env.PORT || 8090);
-var io = require('socket.io').listen(port);
+var fs = require('fs');
+var https = require('https');
+var app = require('express')();
+var port = (process.env.PORT || 443);
 
-console.log("Socket server running on port " + port);
+var options = {
+    key: fs.readFileSync('./certs/privkey.pem'),
+    cert: fs.readFileSync('./certs/fullchain.pem')
+};
+var server = https.createServer(options, app);
+var io = require('socket.io')(server);
 
 var identifier = "#5521SHCBUV";
 var pi_ID, user_ID;
@@ -129,4 +136,8 @@ user_namespace.on("connection", function (client) {
             client.emit("No PI");
         }
     };
+});
+
+server.listen(port, function() {
+    console.log('server up and running at %s port', port);
 });
