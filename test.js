@@ -1,13 +1,12 @@
 var port = (process.env.PORT || 80);
 var io = require('socket.io').listen(port);
-var requests = require('axios');
 
 console.log("Socket server running on port " + port);
 
 var identifier = "#5521SHCBUV";
 var pi_ID, user_ID;
 var pi_client;
-var temperature, humidity, lights = {1: false, 2: false, 3: false};
+var temperature = 32, humidity = 45, lights = {1: true, 2: false, 3: true};
 var packet = {};
 
 
@@ -123,11 +122,6 @@ user_namespace.on("connection", function (client) {
             pi_client.emit('toggle', light, boolState);
         });
 
-        if(pi_ID != null) {
-            client.emit("authenticated");
-        }
-        else {
-            client.emit("No PI");
-        }
+        client.emit("authenticated");
     };
 });

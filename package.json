@@ -18,6 +18,7 @@
   "author": "Utkarsh Vishnoi",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.2",
     "socket.io": "^2.0.4"
   }
