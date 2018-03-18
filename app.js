@@ -1,4 +1,4 @@
-var port = (process.env.PORT || 8000);
+var port = (process.env.PORT || 80);
 var io = require('socket.io').listen(port);
 var requests = require('axios');
 
