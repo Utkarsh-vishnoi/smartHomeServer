@@ -1,4 +1,4 @@
-var port = (process.env.PORT || 80);
+var port = (process.env.PORT || 8090);
 var io = require('socket.io').listen(port);
 var requests = require('axios');
 
@@ -6,7 +6,7 @@ console.log("Socket server running on port " + port);
 
 var identifier = "#5521SHCBUV";
 var pi_ID, user_ID;
-var pi_client;
+var pi_client, user_client = null;
 var temperature, humidity, lights = {1: false, 2: false, 3: false};
 var packet = {};
 
@@ -68,12 +68,19 @@ pi_namespace.on("connection", function (client) {
             var pData = JSON.parse(data);
             temperature = pData.temperature;
             humidity = pData.humidity;
-            // console.log(data);
+            requests.get('http://139.59.67.201/update', {
+                params: {
+                    api_key: "J95Q2XY2YKFL2OLP",
+                    field1: temperature,
+                    field2: humidity
+                }
+            });
         });
 
         client.on('lights', function (data) {
             lights = JSON.parse(data);
-            console.log(lights);
+            if(user_client != null)
+                user_client.emit('switch_backflip', lights);
         });
 
         client.emit("authenticated");
@@ -82,6 +89,7 @@ pi_namespace.on("connection", function (client) {
 
 user_namespace.on("connection", function (client) {
     client.auth = false;
+    user_client = client;
 
     client.on("authenticate", function (data) {
         var authData = JSON.parse(data);

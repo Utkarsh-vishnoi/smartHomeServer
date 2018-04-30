@@ -1,12 +1,13 @@
 var port = (process.env.PORT || 8090);
 var io = require('socket.io').listen(port);
+var requests = require('axios');
 
 console.log("Socket server running on port " + port);
 
 var identifier = "#5521SHCBUV";
 var pi_ID, user_ID;
 var pi_client;
-var temperature = 32, humidity = 45, lights = {1: true, 2: false, 3: true};
+var temperature = 32, humidity = 45, lights = {1: false, 2: true, 3: true};
 var packet = {};
 
 
@@ -67,7 +68,14 @@ pi_namespace.on("connection", function (client) {
             var pData = JSON.parse(data);
             temperature = pData.temperature;
             humidity = pData.humidity;
-            // console.log(data);
+            // console.log(data); http://192.168.43.177/update?api_key=KSR6IBTU5N51WE10&field3=1
+            requests.get('http://192.168.43.177/update', {
+                params: {
+                    api_key: "CMJ37A74GVAWNQ9X",
+                    field1: temperature,
+                    field2: humidity
+                }
+            });
         });
 
         client.on('lights', function (data) {
@@ -118,7 +126,7 @@ user_namespace.on("connection", function (client) {
             else {
                 boolState = 0;
             }
-
+            console.log("Toggle Activated: " + light + " || " + state);
             pi_client.emit('toggle', light, boolState);
         });
 
