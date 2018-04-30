@@ -1,8 +1,10 @@
 var port = (process.env.PORT || 8090);
 var io = require('socket.io').listen(port);
 var requests = require('axios');
+var ip = require('ip');
 
-console.log("Socket server running on port " + port);
+console.log("Socket server started!");
+console.log(ip.address() + ":" + port);
 
 var identifier = "#5521SHCBUV";
 var pi_ID, user_ID;
