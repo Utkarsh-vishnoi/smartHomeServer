@@ -40,7 +40,7 @@ var timeOut = function(client) {
             console.log("Disconnecting socket ", client.id);
             client.disconnect('unauthorized');
         }
-    }, 1000);
+    }, 5000);
 };
 
 pi_namespace.on("connection", function (client) {
