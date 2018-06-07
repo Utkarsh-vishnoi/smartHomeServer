@@ -69,8 +69,7 @@ pi_namespace.on("connection", function (client) {
         console.log("----------------------------------------");
 
         client.on("initLights", function (data) {
-            packet.lights = JSON.parse(data);
-            console.log("Hoorah!!");
+            packet.lights = data;
         });
 
         client.on('lights', function (data) {
