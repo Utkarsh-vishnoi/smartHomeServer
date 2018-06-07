@@ -1,4 +1,4 @@
-var port = (process.env.PORT || 8090);
+var port = (process.env.PORT || 80);
 var io = require('socket.io').listen(port);
 var requests = require('axios');
 var moment = require('moment');
@@ -67,6 +67,11 @@ pi_namespace.on("connection", function (client) {
         console.log("Smart PI connected.");
         console.log("Authentication ID - " + client.id);
         console.log("----------------------------------------");
+
+        client.on("initLights", function (data) {
+            packet.lights = JSON.parse(data);
+            console.log("Hoorah!!");
+        });
 
         client.on('lights', function (data) {
             packet.lights = JSON.parse(data);
@@ -176,7 +181,6 @@ user_namespace.on("connection", function (client) {
                 graph.time = timePacket;
                 packet.graph = graph;
                 client.emit("statusResponse", packet);
-                console.log(packet);
             });
         });
 
